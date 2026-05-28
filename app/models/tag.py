@@ -7,6 +7,6 @@ import uuid
 class Tag(BaseModel):
     __tablename__ = "tags"
 
-    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    name = Column(String(100), nullable=False)
-    slug = Column(String(100), nullable=False)
+    id      = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    name    = Column(String(100), nullable=False)
+    slug    = Column(String(100), nullable=False)
