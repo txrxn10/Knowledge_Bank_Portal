@@ -15,7 +15,7 @@ class Department(BaseModel):
     visibility = Column(String(10), nullable=False)
     is_active = Column(Boolean, default=True)
     parent_id = Column(UUID(as_uuid=True), ForeignKey("departments.id"), nullable=True)
-    metadata = Column(JSON, nullable=True)
+    dept_metadata = Column(JSON, nullable=True)
     deleted_at = Column(String, nullable=True)
 
 

@@ -16,5 +16,5 @@ class Category(BaseModel):
     icon_url = Column(String, nullable=True)
     is_active = Column(Boolean, default=True)
     sort_order = Column(Integer, nullable=True)
-    metadata = Column(JSON, nullable=True)
+    cat_metadata = Column(JSON, nullable=True)
     deleted_at = Column(String, nullable=True)

@@ -18,5 +18,5 @@ class User(BaseModel):
     department_id = Column(UUID(as_uuid=True), ForeignKey("departments.id"), nullable=True)
     reporting_manager = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=True)
     last_login_at = Column(String, nullable=True)
-    metadata = Column(JSON, nullable=True)
+    user_metadata = Column(JSON, nullable=True)
     deleted_at = Column(String, nullable=True)
