@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  api:
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      - DEBUG=True
+      # For PostgreSQL, start postgres first:
+      # docker run -d --name postgres -e POSTGRES_PASSWORD=password -p 5432:5432 postgres:15
+      # Then uncomment:
+      # - DATABASE_URL=postgresql://postgres:password@localhost:5432/knowledge_bank
+    command: uvicorn app.main:app --host 0.0.0.0 --reload
+
+# Note: PostgreSQL database should be provided externally
+# For local development, run: docker run -d --name postgres -e POSTGRES_PASSWORD=postgres -p 5432:5432 postgres:15
