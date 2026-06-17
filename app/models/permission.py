@@ -4,6 +4,7 @@ from app.db.base import BaseModel
 import uuid
 
 
+
 class Permission(BaseModel):
     __tablename__ = "permissions"
 

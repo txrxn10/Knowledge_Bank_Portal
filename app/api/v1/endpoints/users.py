@@ -1,9 +1,10 @@
-from fastapi import APIRouter, Depends, HTTPException, status
-from app.schemas.user import UserCreate, UserResponse
+from fastapi import APIRouter, Depends, status
 from app.repositories.abstract.user import UserRepository
-from app.dependencies import get_user_repository
+from app.schemas.user import UserCreate, UserResponse
 from app.core.exceptions import NotFoundException, ConflictException
-from app.utils.security import hash_password
+from app.services.user import UserService
+from app.dependencies import get_user_service, get_user_repository
+from uuid import UUID
 
 router = APIRouter(prefix="/users", tags=["users"])
 
@@ -17,27 +18,24 @@ def test_domain():
     }
 
 
-@router.post("", response_model=UserResponse, status_code=status.HTTP_201_CREATED)
+@router.post(
+    "",
+    response_model=UserResponse,
+    status_code=status.HTTP_201_CREATED
+)
 def create_user(
     user_in: UserCreate,
-    repo: UserRepository = Depends(get_user_repository)
+    user_service: UserService = Depends(get_user_service)
 ):
-    existing_user = repo.get_by_email(user_in.email)
-    if existing_user:
-        raise ConflictException(detail="Email already registered")
-
-    hashed_password = hash_password(user_in.password)
-    user = repo.create_with_password(
-        email=user_in.email,
-        full_name=user_in.full_name,
-        hashed_password=hashed_password
-    )
-    return user
+    try:
+        return user_service.create_user(user_in)
+    except ValueError as e:
+        raise ConflictException(detail=str(e))
 
 
 @router.get("/{user_id}", response_model=UserResponse)
 def get_user(
-    user_id: int,
+    user_id: UUID,
     repo: UserRepository = Depends(get_user_repository)
 ):
     user = repo.get(user_id)

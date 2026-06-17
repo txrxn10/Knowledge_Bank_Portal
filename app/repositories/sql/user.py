@@ -1,4 +1,5 @@
 from sqlalchemy.orm import Session
+from uuid import UUID
 from typing import Optional, List
 from app.repositories.abstract.user import UserRepository
 from app.models.user import User
@@ -11,7 +12,7 @@ class SQLUserRepository(UserRepository):
     def __init__(self, db: Session):
         self.db = db
 
-    def get(self, id: int) -> Optional[User]:
+    def get(self, id: UUID) -> Optional[User]:
         return self.db.query(User).filter(User.id == id).first()
 
     def get_all(self, skip: int = 0, limit: int = 100) -> List[User]:
@@ -19,27 +20,46 @@ class SQLUserRepository(UserRepository):
 
     def get_by_email(self, email: str) -> Optional[User]:
         return self.db.query(User).filter(User.email == email).first()
-
     def create(self, obj: UserCreate) -> User:
-        raise NotImplementedError("Use create_with_password instead")
-
-    def create_with_password(self, email: str, full_name: str, hashed_password: str) -> User:
-        user = User(
-            email=email,
-            full_name=full_name,
-            hashed_password=hashed_password
+        raise NotImplementedError(
+            "Use create_user instead"
         )
+
+    def create_user(self,
+                    employee_id: str,
+                    full_name: str,
+                    email: str,
+                    role: str,
+                    designation: str | None = None) -> User:
+        user = User(
+            employee_id=employee_id,
+            full_name=full_name,
+            email=email,
+            role=role,
+            designation=designation,
+            status="active"
+        )
+
         self.db.add(user)
         self.db.commit()
         self.db.refresh(user)
         return user
 
-    def update(self, id: int, obj_in: UserUpdate) -> Optional[User]:
+    def get_by_employee_id(self,
+                           employee_id: str
+    ) -> Optional[User]:
+        return (
+            self.db.query(User)
+            .filter(User.employee_id == employee_id)
+            .first()
+        )
+
+    def update(self, id: UUID, obj_in: UserUpdate) -> Optional[User]:
         user = self.get(id)
         if not user:
             return None
 
-        update_data = obj_in.dict(exclude_unset=True)
+        update_data = obj_in.model_dump(exclude_unset=True)
         for field, value in update_data.items():
             if value is not None:
                 setattr(user, field, value)
@@ -49,7 +69,7 @@ class SQLUserRepository(UserRepository):
         self.db.refresh(user)
         return user
 
-    def delete(self, id: int) -> bool:
+    def delete(self, id: UUID) -> bool:
         user = self.get(id)
         if not user:
             return False

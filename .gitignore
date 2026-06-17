@@ -6,7 +6,18 @@
 # Node artifact files
 node_modules/
 dist/
+venv/
 
+
+# Python virtual environment
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.env
+*.venv
+env/
 # Compiled Java class files
 *.class
 

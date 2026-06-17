@@ -1,0 +1,1 @@
+from app.repositories.sql.department import SQLDepartmentRepository

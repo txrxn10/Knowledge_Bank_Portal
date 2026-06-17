@@ -1,6 +1,8 @@
 from abc import ABC, abstractmethod
 from typing import Generic, TypeVar, Optional, List
 
+from sqlalchemy import UUID
+
 T = TypeVar('T')
 
 
@@ -8,7 +10,7 @@ class BaseRepository(ABC, Generic[T]):
     """Abstract base repository for data access operations"""
 
     @abstractmethod
-    def get(self, id: int) -> Optional[T]:
+    def get(self, id: UUID) -> Optional[T]:
         """Get a single item by ID"""
         pass
 
@@ -23,11 +25,12 @@ class BaseRepository(ABC, Generic[T]):
         pass
 
     @abstractmethod
-    def update(self, id: int, obj_in) -> Optional[T]:
+    def update(self, id: UUID, obj_in) -> Optional[T]:
         """Update an existing item"""
         pass
 
     @abstractmethod
-    def delete(self, id: int) -> bool:
+    def delete(self, id: UUID) -> bool:
         """Delete an item by ID"""
         pass
+

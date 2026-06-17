@@ -1,5 +1,6 @@
 from abc import abstractmethod
 from typing import Optional
+
 from app.repositories.abstract.base import BaseRepository
 from app.models.user import User
 
@@ -13,6 +14,17 @@ class UserRepository(BaseRepository[User]):
         pass
 
     @abstractmethod
-    def create_with_password(self, email: str, full_name: str, hashed_password: str) -> User:
-        """Create user with hashed password"""
+    def create_user(
+                    self, 
+                    employee_id: str,
+                    full_name: str,
+                    email: str,
+                    role: str,
+                    designation: str | None = None,
+    )-> User:
+        pass
+
+    @abstractmethod
+    def get_by_employee_id(self, employee_id: str) -> Optional[User]:
+        """Get user by employee ID"""
         pass
