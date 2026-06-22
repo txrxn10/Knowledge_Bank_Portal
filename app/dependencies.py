@@ -1,5 +1,10 @@
 from fastapi import Depends
 from sqlalchemy.orm import Session
+from fastapi import HTTPException
+from fastapi.security import OAuth2PasswordBearer
+
+from app.utils.security import decode_access_token
+
 
 from app.db.session import get_db
 
@@ -37,3 +42,33 @@ def get_department_service(
     )
 ) -> DepartmentService:
     return DepartmentService(repo)
+
+
+oauth2_scheme = OAuth2PasswordBearer(
+    tokenUrl="/api/v1/auth/login"
+)
+
+
+def get_current_user(
+    token: str = Depends(oauth2_scheme),
+    db: Session = Depends(get_db)
+):
+    user_id = decode_access_token(token)
+
+    if not user_id:
+        raise HTTPException(
+            status_code=401,
+            detail="Invalid token"
+        )
+
+    user_repo = SQLUserRepository(db)
+
+    user = user_repo.get(user_id)
+
+    if not user:
+        raise HTTPException(
+            status_code=401,
+            detail="User not found"
+        )
+
+    return user

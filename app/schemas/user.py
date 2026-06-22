@@ -10,6 +10,7 @@ class UserBase(BaseModel):
 
 class UserCreate(UserBase):
     employee_id: str
+    password: str
 
     role: str
     designation: str | None = None

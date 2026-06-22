@@ -29,12 +29,14 @@ class SQLUserRepository(UserRepository):
                     employee_id: str,
                     full_name: str,
                     email: str,
+                    password_hash: str,
                     role: str,
                     designation: str | None = None) -> User:
         user = User(
             employee_id=employee_id,
             full_name=full_name,
             email=email,
+            password_hash=password_hash,
             role=role,
             designation=designation,
             status="active"
