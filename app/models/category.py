@@ -15,6 +15,15 @@ class Category(BaseModel):
     parent_id       = Column(UUID(as_uuid=True), ForeignKey("categories.id"), nullable=True)
     icon_url        = Column(String, nullable=True)
     is_active       = Column(Boolean, default=True)
-    sort_order      = Column(Integer, nullable=True)
-    cat_metadata    = Column(JSON, nullable=True)
+    sort_order = Column(
+    Integer,
+    nullable=False,
+    default=0
+)
+    cat_metadata = Column(
+    "metadata",
+    JSON,
+    nullable=False,
+    default=dict
+)
     deleted_at      = Column(String, nullable=True)

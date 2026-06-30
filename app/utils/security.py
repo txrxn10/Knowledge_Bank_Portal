@@ -27,6 +27,15 @@ def create_access_token(data: dict, expires_delta: timedelta | None = None):
     encoded_jwt = jwt.encode(to_encode, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
     return encoded_jwt
 
+def create_refresh_token(
+        data: dict
+
+): 
+    to_encode = data.copy()
+    expire = datetime.utcnow() + timedelta(days=7)
+    to_encode.update({"exp": expire, "type": "refresh"})
+    encoded_jwt = jwt.encode(to_encode, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
+    return encoded_jwt
 
 
 def decode_access_token(token: str):
@@ -37,17 +46,38 @@ def decode_access_token(token: str):
             algorithms=[settings.ALGORITHM]
         )
 
-        print("PAYLOAD:", payload)
-
         user_id = payload.get("sub")
-
-        print("USER_ID:", user_id)
 
         if not user_id:
             return None
 
         return UUID(user_id)
 
-    except Exception as e:
-        print("JWT ERROR:", e)
+    except Exception:
         return None
+    
+
+
+
+def decode_refresh_token(
+        token: str
+):
+    try:
+        payload = jwt.decode(
+            token,
+            settings.SECRET_KEY,
+            algorithms = [settings.ALGORITHM]
+        )
+
+        if payload.get("type") != "refresh":
+            return None
+
+        user_id = payload.get("sub")
+
+        if not user_id:
+            return None
+        
+        return UUID(user_id)
+    except Exception:
+        return None
+    

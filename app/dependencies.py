@@ -9,6 +9,13 @@ from app.utils.security import decode_access_token
 from app.db.session import get_db
 
 from app.services.user import UserService
+
+from app.services.category import CategoryService
+
+from app.repositories.sql.category import SQLCategoryRepository
+
+from app.repositories.abstract.category import CategoryRepository
+
 from app.services.department import DepartmentService
 
 from app.repositories.sql.user import SQLUserRepository
@@ -16,6 +23,26 @@ from app.repositories.sql.department import SQLDepartmentRepository
 
 from app.repositories.abstract.user import UserRepository
 from app.repositories.abstract.department import DepartmentRepository
+
+from app.services.tag import TagService
+
+from app.repositories.sql.tag import SQLTagRepository
+
+from app.repositories.abstract.tag import TagRepository
+
+def get_tag_repository(
+    db: Session = Depends(get_db)
+) -> TagRepository:
+    return SQLTagRepository(db)
+
+
+def get_tag_service(
+    repo: TagRepository = Depends(
+        get_tag_repository
+    )
+) -> TagService:
+    return TagService(repo)
+
 
 
 def get_user_repository(
@@ -47,6 +74,19 @@ def get_department_service(
 oauth2_scheme = OAuth2PasswordBearer(
     tokenUrl="/api/v1/auth/login"
 )
+
+def get_category_repository(
+    db: Session = Depends(get_db)
+) -> CategoryRepository:
+    return SQLCategoryRepository(db)
+
+
+def get_category_service(
+    repo: CategoryRepository = Depends(
+        get_category_repository
+    )
+) -> CategoryService:
+    return CategoryService(repo)
 
 
 def get_current_user(

@@ -22,7 +22,7 @@ from app.core.exceptions import (
 
 router = APIRouter(
     prefix="/departments",
-    tags=["departments"]
+    tags=["Master"]
 )
 
 

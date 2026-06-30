@@ -1,7 +1,12 @@
+from uuid import UUID
+
 from app.utils.security import hash_password
 from app.repositories.abstract.user import UserRepository
 from app.models.user import User
-from app.schemas.user import UserCreate
+from app.schemas.user import (
+    UserCreate,
+    UserUpdate
+)
 
 
 class UserService:
@@ -11,7 +16,6 @@ class UserService:
         user_repo: UserRepository
     ):
         self.user_repo = user_repo
-
 
     def create_user(
         self,
@@ -44,10 +48,10 @@ class UserService:
             raise ValueError(
                 "Employee ID already exists"
             )
-        hashed_password = hash_password(
-        user_data.password
-        )
 
+        hashed_password = hash_password(
+            user_data.password
+        )
 
         return self.user_repo.create_user(
             employee_id=user_data.employee_id,
@@ -56,4 +60,22 @@ class UserService:
             password_hash=hashed_password,
             role=user_data.role,
             designation=user_data.designation
+        )
+
+    def update_user(
+        self,
+        user_id: UUID,
+        user_data: UserUpdate
+    ):
+
+        user = self.user_repo.get(user_id)
+
+        if not user:
+            raise ValueError(
+                "User not found"
+            )
+
+        return self.user_repo.update(
+            user_id,
+            user_data
         )

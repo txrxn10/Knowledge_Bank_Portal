@@ -1,1 +1,2 @@
 from app.repositories.sql.department import SQLDepartmentRepository
+from app.repositories.sql.category import SQLCategoryRepository

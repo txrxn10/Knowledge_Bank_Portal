@@ -16,7 +16,8 @@ class AuthService:
     ):
         from app.utils.security import (
             verify_password,
-            create_access_token
+            create_access_token,
+            create_refresh_token
         )
 
         from app.schemas.auth import TokenResponse
@@ -41,10 +42,16 @@ class AuthService:
                 "Invalid email or password"
             )
 
-        token = create_access_token(
+        access_token = create_access_token(
+            {"sub": str(user.id)}
+        )
+
+        refresh_token = create_refresh_token(
             {"sub": str(user.id)}
         )
 
         return TokenResponse(
-            access_token=token
+            access_token=access_token,
+            refresh_token=refresh_token
         )
+        
