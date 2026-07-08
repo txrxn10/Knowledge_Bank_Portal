@@ -1,0 +1,1 @@
+from app.repositories.abstract.category import CategoryRepository

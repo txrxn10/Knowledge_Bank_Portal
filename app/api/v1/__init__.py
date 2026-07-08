@@ -7,6 +7,7 @@ from app.api.v1.endpoints import (
     department,
     category,
     tag,
+    article,
     health
 )
 
@@ -18,4 +19,5 @@ api_router.include_router(department.router)
 api_router.include_router(category.router)
 api_router.include_router(tag.router)
 api_router.include_router(collection.router)
+api_router.include_router(article.router)
 api_router.include_router(health.router)

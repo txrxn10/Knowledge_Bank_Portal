@@ -30,6 +30,12 @@ from app.repositories.sql.tag import SQLTagRepository
 
 from app.repositories.abstract.tag import TagRepository
 
+from app.services.article import ArticleService
+
+from app.repositories.sql.article import SQLArticleRepository
+
+from app.repositories.abstract.article import ArticleRepository
+
 def get_tag_repository(
     db: Session = Depends(get_db)
 ) -> TagRepository:
@@ -88,6 +94,18 @@ def get_category_service(
 ) -> CategoryService:
     return CategoryService(repo)
 
+
+def get_article_repository(
+    db: Session = Depends(get_db)
+) -> ArticleRepository:
+    return SQLArticleRepository(db)
+
+def get_article_service(
+    repo: ArticleRepository = Depends(
+        get_article_repository
+    )
+) -> ArticleService:
+    return ArticleService(repo)
 
 def get_current_user(
     token: str = Depends(oauth2_scheme),
